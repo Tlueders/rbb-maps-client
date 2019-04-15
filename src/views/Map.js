@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet'
+import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import * as ELG from 'esri-leaflet-geocoder';
 
 class MapView extends Component {
     constructor() {
@@ -10,22 +11,25 @@ class MapView extends Component {
                 lat: 51.505,
                 lng: -0.09
             },
-            zoom: 17,
+            zoom: 0,
             markers: []
         }
 
         this.addMarker = this.addMarker.bind(this);
         this.refmarker = React.createRef();
+        this.mapRef = React.createRef();
     }
 
     componentDidMount(){
-        navigator.geolocation.getCurrentPosition((position) => {
-            this.setState({
-                home: {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                }
-            });
+        const map = this.mapRef.current.leafletElement;
+        const searchControl = new ELG.Geosearch().addTo(map);
+        const results = new L.LayerGroup().addTo(map);
+
+        searchControl.on('results', function(data){
+            results.clearLayers();
+            for (let i = data.results.length - 1; i >= 0; i--) {
+                results.addLayer(L.marker(data.results[i].latlng));
+            }
         });
     }
 
@@ -52,35 +56,33 @@ class MapView extends Component {
             console.log(this.state.markers);
         }
     }
-
+    
     render() {
         const pointerIcon = new L.Icon({
             iconUrl: require('../assets/marker-icon.png'),
             iconSize: [25, 41]
-        })
+        });
 
         const startPosition = [this.state.home.lat, this.state.home.lng]
 
         return(
-            <Map className="map" center={startPosition} zoom={this.state.zoom} onClick={this.addMarker}>
-                <TileLayer
-                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={startPosition} icon={pointerIcon}>
-                    <Popup>
-                        This is the home for sale.
-                    </Popup>
-                </Marker>
-                {this.state.markers.map((position, idx) => 
-                    <Marker key={`marker-${idx}`} position={position} icon={pointerIcon} draggable={true} onDragend={this.updatePosition} ref={this.refmarker}>
-                        <Popup>
-                            Lat: {this.state.markers[idx].lat}, Lng: {this.state.markers[idx].lng}
-                            <button onClick={this.deleteSign}>delete sign</button>
-                        </Popup>
-                    </Marker>
-                )}
-            </Map>
+            <React.Fragment>
+                <div className='pointer'></div>
+                <Map className="map" center={startPosition} zoom={this.state.zoom} onClick={this.addMarker} ref={this.mapRef}>
+                    <TileLayer
+                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {this.state.markers.map((position, idx) => 
+                        <Marker key={`marker-${idx}`} position={position} icon={pointerIcon} draggable={true} onDragend={this.updatePosition} ref={this.refmarker}>
+                            <Popup>
+                                Lat: {this.state.markers[idx].lat}, Lng: {this.state.markers[idx].lng}
+                                <button onClick={this.deleteSign}>delete sign</button>
+                            </Popup>
+                        </Marker>
+                    )}
+                </Map>
+            </React.Fragment>
         );
     }
 }
