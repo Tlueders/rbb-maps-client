@@ -40,21 +40,15 @@ class MapView extends Component {
         console.log(markers);
     }
 
-    deleteSign = (e) => {
-        const {markers} = this.state;
-        markers.splice(e.latlng);
-        this.setState({markers});
+    deleteSign = (index) => {
+        const markers = this.state.markers;
+        markers.splice(index, 1);
+        this.setState({ markers });
         console.log(markers);
     }
 
-    updatePosition = () => {
-        const marker = this.refmarker.current
-        if (marker != null) {
-            this.setState({
-                markers: marker.leafletElement.getLatLng(),
-            })
-            console.log(this.state.markers);
-        }
+    updatePosition = (e) => {
+        
     }
     
     render() {
@@ -74,10 +68,10 @@ class MapView extends Component {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     {this.state.markers.map((position, idx) => 
-                        <Marker key={`marker-${idx}`} position={position} icon={pointerIcon} draggable={true} onDragend={this.updatePosition} ref={this.refmarker}>
+                        <Marker key={idx} position={position} icon={pointerIcon} draggable={true} onDragend={this.updatePosition} ref={this.refmarker}>
                             <Popup>
                                 Lat: {this.state.markers[idx].lat}, Lng: {this.state.markers[idx].lng}
-                                <button onClick={this.deleteSign}>delete sign</button>
+                                <button onClick={this.deleteSign.bind(this, idx)}>delete sign</button>
                             </Popup>
                         </Marker>
                     )}
