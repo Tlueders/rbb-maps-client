@@ -5,6 +5,7 @@
   "dependencies": {
     "antd": "^3.16.2",
     "babel-polyfill": "^6.26.0",
+    "dotenv": "^7.0.0",
     "esri-leaflet-geocoder": "^2.2.14",
     "leaflet": "^1.4.0",
     "leaflet-geosearch": "^2.7.0",
