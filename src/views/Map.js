@@ -12,12 +12,11 @@ class MapView extends Component {
                 lng: -0.09
             },
             zoom: 0,
-            markers: [],
-            draggable: false
+            markers: []
         }
 
         this.addMarker = this.addMarker.bind(this);
-        this.updatePosition = this.updatePosition.bind(this);
+        // this.updatePosition = this.updatePosition.bind(this);
         this.refmarker = React.createRef();
         this.mapRef = React.createRef();
     }
@@ -39,29 +38,27 @@ class MapView extends Component {
         const {markers} = this.state;
         markers.push(e.latlng);
         this.setState({markers})
-        // console.log(markers);
     }
 
-    deleteSign = (index) => {
+    deleteSign = (idx) => {
         const markers = this.state.markers;
-        markers.splice(index, 1);
+        markers.splice(idx, 1);
         this.setState({ markers });
-        console.log(index);
     }
 
-    updatePosition = (key) => {
-        let markers = this.state.markers;
-        let marker = this.refmarker.current;
-        console.log(key);
-        // const newPosition = marker.leafletElement.getLatLng();
-        // this.setState({ markers });
-        
-        // console.log(markers);
-    }
+    // updatePosition = (idx) => {
+    //     const marker = this.refmarker.current;
+    //     let {markers} = this.state;
+    //     markers[idx] = marker.leafletElement.getLatLng();
+    //     this.setState({
+    //         markers: markers,
+    //         draggable: false
+    //     });
+    // }
 
-    toggleDraggable = () => {
-        this.setState({ draggable: !this.state.draggable })
-    }
+    // toggleDraggable = () => {
+    //     this.setState({ draggable: !this.state.draggable })
+    // }
 
     
     render() {
@@ -81,11 +78,8 @@ class MapView extends Component {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     {this.state.markers.map((position, idx, props) => 
-                        <Marker key={idx} position={position} icon={pointerIcon} draggable={this.state.draggable} onDragend={this.updatePosition} ref={this.refmarker}>
+                        <Marker key={idx} position={position} icon={pointerIcon} ref={this.refmarker}>
                             <Popup>
-                                <span onClick={this.toggleDraggable}>
-                                    {this.state.draggable ? 'DRAG MARKER' : 'MARKER FIXED'}
-                                </span>
                                 Lat: {this.state.markers[idx].lat}, Lng: {this.state.markers[idx].lng}
                                 <button onClick={this.deleteSign.bind(this, idx)}>delete sign</button>
                             </Popup>

@@ -1,39 +1,88 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, Form, Icon, Input, Button } from 'antd';
-import { Link } from "react-router-dom";
+import { Row, Col, Card, Form, Icon, Input, Button, Select, Tag} from 'antd';
 
 class Login extends Component {
 
+    constructor() {
+        super();
+
+        this.state = {
+            step: 1,
+            firstname: '',
+            lastname: '',
+            phone: '',
+            email: '',
+            city: ''
+        }
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+    }
+
     handleSubmit = (e) => {
+        const {firstname, lastname, phone, email, city} = this.state;
+        const form = {firstname, lastname, phone, email, city};
         e.preventDefault();
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            }
+        console.log(form);
+    }
+
+    handleChange(event) {
+        this.setState({
+            [event.target.name]: event.target.value
         });
     }
 
+    handleSelect(value) {
+       this.setState({
+           city: value
+       });
+    }
+
+    onSearch(val) {
+        console.log('search:', val);
+    }
+
+
     render() {
+        const Option = Select.Option;
+
         return(
             <div>
                 <Row>
                     <Col span={6}></Col>
                     <Col span={12}>
                         <Card>
+                            <Tag color="#1890ff" style={{margin: '10px 0px'}}>Step {this.state.step}</Tag>
                             <Form onSubmit={this.handleSubmit} className="login-form">
                                 <Form.Item>
-                                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.handleChange} placeholder="First Name" name="firstname" value={this.state.firstname}/>
                                 </Form.Item>
                                 <Form.Item>
-                                    <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.handleChange} placeholder="Last Name" name="lastname" value={this.state.lastname}/>
                                 </Form.Item>
                                 <Form.Item>
-                                <div className="flex column">
-                                    <Button type="primary" htmlType="submit" className="login-form-button">
-                                        Log in
+                                    <Input prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.handleChange} placeholder="Phone Number" name="phone" value={this.state.phone} type="tel"/>
+                                </Form.Item>
+                                 <Form.Item>
+                                    <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.handleChange} placeholder="Email Address" name="email" value={this.state.email} type="email"/>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Select
+                                        showSearch
+                                        placeholder="Our Available Cities"
+                                        optionFilterProp="children"
+                                        onChange={this.handleSelect}
+                                        onSearch={this.onSearch}
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                    >
+                                        <Option value="tucson">Tucson, Arizona</Option>
+                                    </Select>
+                                </Form.Item>
+                                <Form.Item>
+                                    <Button type="primary" htmlType="submit" className="login-form-button" block>
+                                        Next Step
                                     </Button>
-                                    <Col span={24}><Link to="/register">register now!</Link></Col>
-                                </div>
                                 </Form.Item>
                             </Form>
                         </Card>
