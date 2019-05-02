@@ -5,16 +5,14 @@ import 'leaflet/dist/leaflet.css';
 import 'esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css';
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Login from './views/Login';
-import MapView from './views/Map';
+import Order from './views/Order';
 
 class App extends Component {
   render() {
     return (
       <Router>
         <div>
-          <Route path="/" exact component={Login} />
-          <Route path="/map" exact component={MapView} />
+          <Route path="/" exact component={Order} />
         </div>
       </Router>
     );
