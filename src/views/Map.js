@@ -7,16 +7,9 @@ class MapView extends Component {
     constructor() {
         super();
         this.state = {
-            home: {
-                lat: 51.505,
-                lng: -0.09
-            },
-            zoom: 0,
-            markers: []
+            zoom: 0
         }
 
-        this.addMarker = this.addMarker.bind(this);
-        // this.updatePosition = this.updatePosition.bind(this);
         this.refmarker = React.createRef();
         this.mapRef = React.createRef();
     }
@@ -34,32 +27,11 @@ class MapView extends Component {
         });
     }
 
-    addMarker = (e) => {
-        const {markers} = this.state;
-        markers.push(e.latlng);
-        this.setState({markers})
-    }
-
     deleteSign = (idx) => {
         const markers = this.state.markers;
         markers.splice(idx, 1);
         this.setState({ markers });
     }
-
-    // updatePosition = (idx) => {
-    //     const marker = this.refmarker.current;
-    //     let {markers} = this.state;
-    //     markers[idx] = marker.leafletElement.getLatLng();
-    //     this.setState({
-    //         markers: markers,
-    //         draggable: false
-    //     });
-    // }
-
-    // toggleDraggable = () => {
-    //     this.setState({ draggable: !this.state.draggable })
-    // }
-
     
     render() {
         const pointerIcon = new L.Icon({
@@ -67,21 +39,22 @@ class MapView extends Component {
             iconSize: [25, 41]
         });
 
-        const startPosition = [this.state.home.lat, this.state.home.lng]
+        const startPosition = [this.props.home.lat, this.props.home.lng]
 
+        console.log(this.props);
         return(
             <React.Fragment>
                 <div className='pointer'></div>
-                <Map className="map" center={startPosition} zoom={this.state.zoom} onClick={this.addMarker} ref={this.mapRef}>
+                <Map className="map" center={startPosition} zoom={this.state.zoom} onClick={this.props.onClick} ref={this.mapRef}>
                     <TileLayer
                     attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {this.state.markers.map((position, idx, props) => 
+                    {this.props.markers.map((position, idx, props) => 
                         <Marker key={idx} position={position} icon={pointerIcon} ref={this.refmarker}>
                             <Popup>
-                                Lat: {this.state.markers[idx].lat}, Lng: {this.state.markers[idx].lng}
-                                <button onClick={this.deleteSign.bind(this, idx)}>delete sign</button>
+                                Lat: {this.props.markers[idx].lat}, Lng: {this.props.markers[idx].lng}
+                                <button onClick={this.props.deleteSign.bind(this, idx)}>delete sign</button>
                             </Popup>
                         </Marker>
                     )}

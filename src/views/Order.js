@@ -19,12 +19,26 @@ class Order extends Component {
                 lat: 51.505,
                 lng: -0.09
             },
-            signs: []
+            markers: []
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        this.addMarker = this.addMarker.bind(this);
     };
+
+    // handleSubmit = (e) => {
+    //     const {firstname, lastname, phone, email, company, city} = this.state;
+    //     const form = {firstname, lastname, phone, email, company, city};
+    //     e.preventDefault();
+    //     axios.post('/customers', form)
+    //         .then(res => {
+    //             console.log(res);
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         })
+    // }
 
     nextStep = () => {
         const { step } = this.state
@@ -40,18 +54,18 @@ class Order extends Component {
         })
     }
 
-    // handleSubmit = (e) => {
-    //     const {firstname, lastname, phone, email, company, city} = this.state;
-    //     const form = {firstname, lastname, phone, email, company, city};
-    //     e.preventDefault();
-    //     axios.post('/customers', form)
-    //         .then(res => {
-    //             console.log(res);
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //         })
-    // }
+    addMarker = (e) => {
+        const {markers} = this.state;
+        markers.push(e.latlng);
+        this.setState({markers});
+    }
+
+
+    deleteSign = (idx) => {
+        const markers = this.state.markers;
+        markers.splice(idx, 1);
+        this.setState({ markers });
+    }
 
     handleChange = input => event => {
         this.setState({ [input] : event.target.value })
@@ -64,9 +78,9 @@ class Order extends Component {
     }
 
     render(){
-            const {step} = this.state;
-            const { firstname, lastname, phone, email, company, city, home, signs } = this.state;
-            const values = { firstname, lastname, phone, email, company, city, home, signs};
+            const { step } = this.state;
+            const { firstname, lastname, phone, email, company, city, home } = this.state;
+            const values = { firstname, lastname, phone, email, company, city, home };
 
             switch(step) {
             case 1:
@@ -81,10 +95,11 @@ class Order extends Component {
                 return <Map
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
-                        handleChange = {this.handleChange}
-                        values={values}
+                        onClick={this.addMarker}
+                        deleteSign={this.deleteSign}
+                        markers={this.state.markers}
+                        home={this.state.home}
                         />
-        
             default:
                 break;
         }
