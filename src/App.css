@@ -1,12 +1,4 @@
-.flex {
-  display: flex;
-}
-
-.column {
-  flex-direction: column;
-}
-
 .map {
   margin: 0 auto;
-  height: 500px;
+  height: 100vh;
 }

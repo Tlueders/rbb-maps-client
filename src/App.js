@@ -6,6 +6,8 @@ import 'esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css';
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Order from './views/Order';
+import NoMatch from './views/404';
+
 
 class App extends Component {
   render() {
@@ -13,6 +15,7 @@ class App extends Component {
       <Router>
         <div>
           <Route path="/" exact component={Order} />
+          <Route component={NoMatch} />
         </div>
       </Router>
     );

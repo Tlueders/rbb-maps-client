@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, Form, Icon, Input, Button, Select, Tag} from 'antd';
+import { Layout, Card, Form, Icon, Input, Button, Select, Tag} from 'antd';
+import Sidebar from '../components/Sidebar';
 
 class Details extends Component {
 
@@ -15,14 +16,15 @@ class Details extends Component {
     render() {
         const { values } = this.props;
         const Option = Select.Option;
+        const { Content } = Layout;
 
         return(
-            <div>
-                <Row>
-                    <Col span={6}></Col>
-                    <Col span={12}>
-                        <Card>
-                            <Tag color="#1890ff" style={{margin: '10px 0px'}}>Step {this.props.step}</Tag>
+            
+            <Layout>
+                <Sidebar step={this.props.step} />
+                <Layout>
+                    <Content style={{backgroundColor: '#1890ff', height: '100vh', display: 'flex', alignItems: 'center'}}>
+                        <Card style={{margin: '0 auto', width: '500px'}}>
                             <Form className="login-form">
                                 <Form.Item>
                                     <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.props.handleChange('firstname')} placeholder="First Name" name="firstname" value={values.firstname}/>
@@ -36,7 +38,7 @@ class Details extends Component {
                                 <Form.Item>
                                     <Input prefix={<Icon type="bank" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.props.handleChange('company')} placeholder="Company" name="company" value={values.company}/>
                                 </Form.Item>
-                                 <Form.Item>
+                                    <Form.Item>
                                     <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.props.handleChange('email')} placeholder="Email Address" name="email" type="email" value={values.email}/>
                                 </Form.Item>
                                 <Form.Item>
@@ -53,15 +55,14 @@ class Details extends Component {
                                 </Form.Item>
                                 <Form.Item>
                                     <Button onClick={this.saveAndContinue} type="primary" htmlType="submit" className="login-form-button" block>
-                                        Save and Continue
+                                        Next Step
                                     </Button>
                                 </Form.Item>
                             </Form>
                         </Card>
-                    </Col>
-                    <Col span={6}></Col>
-                </Row>
-            </div>
+                    </Content>
+                </Layout>
+            </Layout>
         );
     }
 }

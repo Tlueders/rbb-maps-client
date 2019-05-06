@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import L from 'leaflet'
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import * as ELG from 'esri-leaflet-geocoder';
+import { Layout } from 'antd';
+import Sidebar from '../components/Sidebar';
+
 
 class MapView extends Component {
     constructor() {
         super();
         this.state = {
-            zoom: 0
+            zoom: 3
         }
 
         this.refmarker = React.createRef();
@@ -34,6 +37,8 @@ class MapView extends Component {
     }
     
     render() {
+        const { Header, Content} = Layout;
+    
         const pointerIcon = new L.Icon({
             iconUrl: require('../assets/marker-icon.png'),
             iconSize: [25, 41]
@@ -43,23 +48,29 @@ class MapView extends Component {
 
         console.log(this.props);
         return(
-            <React.Fragment>
-                <div className='pointer'></div>
-                <Map className="map" center={startPosition} zoom={this.state.zoom} onClick={this.props.onClick} ref={this.mapRef}>
-                    <TileLayer
-                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    {this.props.markers.map((position, idx, props) => 
-                        <Marker key={idx} position={position} icon={pointerIcon} ref={this.refmarker}>
-                            <Popup>
-                                Lat: {this.props.markers[idx].lat}, Lng: {this.props.markers[idx].lng}
-                                <button onClick={this.props.deleteSign.bind(this, idx)}>delete sign</button>
-                            </Popup>
-                        </Marker>
-                    )}
-                </Map>
-            </React.Fragment>
+                <Layout>
+                    <Sidebar step={this.props.step} />
+                    <Layout>
+                        <Header style={{backgroundColor:'#1890ff'}}>
+                        </Header>
+                        <Content>
+                            <Map className="map" center={startPosition} zoom={this.state.zoom} onClick={this.props.onClick} ref={this.mapRef}>
+                                <TileLayer
+                                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                                {this.props.markers.map((position, idx, props) => 
+                                    <Marker key={idx} position={position} icon={pointerIcon} ref={this.refmarker}>
+                                        <Popup>
+                                            Lat: {this.props.markers[idx].lat}, Lng: {this.props.markers[idx].lng}
+                                            <button onClick={this.props.deleteSign.bind(this, idx)}>delete sign</button>
+                                        </Popup>
+                                    </Marker>
+                                )}
+                            </Map>
+                        </Content>
+                    </Layout>                     
+                </Layout>
         );
     }
 }

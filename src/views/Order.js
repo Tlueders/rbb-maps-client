@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Details from './Details';
+import Address from './Address';
 import Map from './Map';
 
 class Order extends Component {
@@ -91,8 +92,17 @@ class Order extends Component {
                         handleSelect={this.handleSelect}
                         values={values}
                         />
-            case 2:
+            case 2: 
+                return <Address
+                        step={this.state.step}
+                        nextStep={this.nextStep} 
+                        prevStep={this.prevStep}
+                        handleChange={this.handleChange}
+                        values={values}
+                        />
+            case 3:
                 return <Map
+                        step={this.state.step}
                         nextStep={this.nextStep}
                         prevStep={this.prevStep}
                         onClick={this.addMarker}
