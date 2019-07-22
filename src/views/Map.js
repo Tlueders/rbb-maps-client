@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import L from 'leaflet'
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
-import * as ELG from 'esri-leaflet-geocoder';
 import { Layout } from 'antd';
 import Sidebar from '../components/Sidebar';
 
@@ -18,47 +17,49 @@ class MapView extends Component {
     }
 
     componentDidMount(){
-        const map = this.mapRef.current.leafletElement;
-        const searchControl = new ELG.Geosearch().addTo(map);
-        const results = new L.LayerGroup().addTo(map);
-
-        searchControl.on('results', function(data){
-            results.clearLayers();
-            for (let i = data.results.length - 1; i >= 0; i--) {
-                results.addLayer(L.marker(data.results[i].latlng));
-            }
-        });
+        this.setState({
+            zoom: 17
+        })
     }
 
     deleteSign = (idx) => {
-        const markers = this.state.markers;
+        const { values } = this.props;
+        const markers = values.markers;
         markers.splice(idx, 1);
         this.setState({ markers });
     }
     
     render() {
+        const { values } = this.props;
         const { Header, Content} = Layout;
-    
         const pointerIcon = new L.Icon({
             iconUrl: require('../assets/marker-icon.png'),
             iconSize: [25, 41]
         });
+        const startPosition = [values.home.lat, values.home.lng]
+        console.log(startPosition);
 
-        const startPosition = [this.props.home.lat, this.props.home.lng]
-
-        console.log(this.props);
         return(
                 <Layout>
-                    <Sidebar step={this.props.step} />
+                    <Sidebar step={this.props.step}>
+                        {values.markers.map((marker) => 
+                            <li>{marker.lat}, {marker.lng}</li>
+                        )}
+                    </Sidebar>
                     <Layout>
                         <Header style={{backgroundColor:'#1890ff'}}>
                         </Header>
                         <Content>
-                            <Map className="map" center={startPosition} zoom={this.state.zoom} onClick={this.props.onClick} ref={this.mapRef}>
+                            <Map className="map" style={{height: '100vh'}} center={startPosition} zoom={this.state.zoom} onClick={this.props.onClick} ref={this.mapRef}>
                                 <TileLayer
                                 attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                 />
+                                <Marker position={startPosition} icon={pointerIcon}>
+                                    <Popup>
+                                        Home
+                                    </Popup>
+                                </Marker>
                                 {this.props.markers.map((position, idx, props) => 
                                     <Marker key={idx} position={position} icon={pointerIcon} ref={this.refmarker}>
                                         <Popup>

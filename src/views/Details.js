@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Card, Form, Icon, Input, Button, Select, Tag} from 'antd';
+import { Layout, Card, Form, Icon, Input, Button, Select} from 'antd';
 import Sidebar from '../components/Sidebar';
 
 class Details extends Component {
@@ -19,14 +19,13 @@ class Details extends Component {
         const { Content } = Layout;
 
         return(
-            
             <Layout>
                 <Sidebar step={this.props.step} />
                 <Layout>
                     <Content style={{backgroundColor: '#1890ff', height: '100vh', display: 'flex', alignItems: 'center'}}>
                         <Card style={{margin: '0 auto', width: '500px'}}>
                             <Form className="login-form">
-                                <Form.Item>
+                                <Form.Item require={true}>
                                     <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} onChange={this.props.handleChange('firstname')} placeholder="First Name" name="firstname" value={values.firstname}/>
                                 </Form.Item>
                                 <Form.Item>
@@ -51,6 +50,7 @@ class Details extends Component {
                                         filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                     >
                                         <Option value="tucson">Tucson, Arizona</Option>
+                                        <Option value="phoenix">Phoenix, Arizona</Option>
                                     </Select>
                                 </Form.Item>
                                 <Form.Item>

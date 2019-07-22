@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-
 import Details from './Details';
 import Address from './Address';
 import Map from './Map';
+import axios from 'axios';
 
 class Order extends Component {
     constructor() {
@@ -15,6 +15,7 @@ class Order extends Component {
             phone: '',
             email: '',
             company: '',
+            address: '',
             city: '',
             home: {
                 lat: 51.505,
@@ -55,6 +56,26 @@ class Order extends Component {
         })
     }
 
+    findAddress = () => {
+        const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+        const address = (this.state.address).replace(/\s+/g, '+');
+        const { step } = this.state
+        axios.post(`https://maps.googleapis.com/maps/api/geocode/json?address=${address},+${this.props.city},+AZ&key=${API_KEY}`)
+            .then(res => {
+                console.log(res.data.results[0].geometry.location);
+                this.setState({
+                    home: {
+                        lat: res.data.results[0].geometry.location.lat,
+                        lng: res.data.results[0].geometry.location.lng
+                    },
+                    step: step + 1 
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
     addMarker = (e) => {
         const {markers} = this.state;
         markers.push(e.latlng);
@@ -80,8 +101,8 @@ class Order extends Component {
 
     render(){
             const { step } = this.state;
-            const { firstname, lastname, phone, email, company, city, home } = this.state;
-            const values = { firstname, lastname, phone, email, company, city, home };
+            const { firstname, lastname, phone, email, company, city, home, address, markers } = this.state;
+            const values = { firstname, lastname, phone, email, company, city, home, address, markers };
 
             switch(step) {
             case 1:
@@ -98,6 +119,7 @@ class Order extends Component {
                         nextStep={this.nextStep} 
                         prevStep={this.prevStep}
                         handleChange={this.handleChange}
+                        findAddress={this.findAddress}
                         values={values}
                         />
             case 3:
@@ -109,6 +131,7 @@ class Order extends Component {
                         deleteSign={this.deleteSign}
                         markers={this.state.markers}
                         home={this.state.home}
+                        values={values}
                         />
             default:
                 break;

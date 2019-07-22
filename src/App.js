@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import 'leaflet/dist/leaflet.css';
 import 'esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css';
 
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Order from './views/Order';
 import NoMatch from './views/404';
 
@@ -14,8 +14,10 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route path="/" exact component={Order} />
-          <Route component={NoMatch} />
+          <Switch>
+            <Route path="/" exact component={Order} />
+            <Route component={NoMatch} />
+          </Switch>
         </div>
       </Router>
     );
