@@ -11,8 +11,8 @@ pipeline {
         }
         stage('Version') {
             steps {
-                sh 'mv /build/index.html build/index-"$BUILD_NUMBER".html'
-                sh 'cd /build && ls'
+                sh 'mv ./build/index.html ./build/index-"$BUILD_NUMBER".html'
+                sh 'cd .ls/build && ls'
             }
         }
     }
