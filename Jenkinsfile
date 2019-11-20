@@ -12,7 +12,7 @@ pipeline {
         stage('Version') {
             steps {
                 sh 'mv ./build/index.html ./build/index-"$BUILD_NUMBER".html'
-                sh 'cd .ls/build && ls'
+                sh 'cd ./build && ls'
             }
         }
     }
