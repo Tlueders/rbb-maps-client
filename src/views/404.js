@@ -6,7 +6,7 @@ class NoMatch extends Component {
         return(
             <div>
                 <h1>404, This Page does not exist.</h1>
-                <Link to="/">Please Go Back To Start.</Link>
+                <Link to="/">Go Back To Start.</Link>
             </div>
         );
     }
