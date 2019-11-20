@@ -12,7 +12,6 @@ pipeline {
             steps {
                 sh 'mv ./build/index.html ./build/index-"$BUILD_NUMBER".html'
                 sh 'cd ./build && ls'
-                sh 'echo "${env.BUILD_NUMBER}"'
             }
         }
         stage('Deliver') {
