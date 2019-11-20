@@ -12,12 +12,13 @@ pipeline {
             steps {
                 sh 'mv ./build/index.html ./build/index-"$BUILD_NUMBER".html'
                 sh 'cd ./build && ls'
+                sh 'echo "${env.BUILD_NUMBER}"'
             }
         }
         stage('Deliver') {
             steps{
                 withAWS(region:'us-west-2', credentials:'7474d8c0-3502-40a8-b8c9-13eedcd9d70d') {
-                    s3Upload(file:'index-"$BUILD_NUMBER".html', bucket:'ab-partner-locator', path:'./build/index-"$BUILD_NUMBER".html')
+                    s3Upload(file:'./build/index-"$BUILD_NUMBER".html', bucket:'ab-partner-locator', path:'./')
                 }
             }
         }
